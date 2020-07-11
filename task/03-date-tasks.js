@@ -22,7 +22,7 @@
  *    'Sun, 17 May 1998 03:00:00 GMT+01' => Date()
  */
 function parseDataFromRfc2822(value) {
-   throw new Error('Not implemented');
+   return new Date (value);
 }
 
 /**
@@ -37,7 +37,7 @@ function parseDataFromRfc2822(value) {
  *    '2016-01-19T08:07:37Z' => Date()
  */
 function parseDataFromIso8601(value) {
-   throw new Error('Not implemented');
+   return new Date (value);
 }
 
 
@@ -56,7 +56,9 @@ function parseDataFromIso8601(value) {
  *    Date(2015,1,1)    => false
  */
 function isLeapYear(date) {
-   throw new Error('Not implemented');
+   let _date = new Date (date);
+   let year = _date.getFullYear();
+   return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
 }
 
 
@@ -76,7 +78,13 @@ function isLeapYear(date) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
 function timeSpanToString(startDate, endDate) {
-   throw new Error('Not implemented');
+ let rez = endDate - startDate;
+ let hh = Math.trunc(rez / 3600000 % 100).toString().padStart(2, '0');
+ let mm = Math.trunc(rez / 60000 % 60).toString().padStart(2, '0');
+ let ss = Math.trunc(rez / 1000 % 60).toString().padStart(2, '0');
+ let sss = Math.trunc(rez % 1000).toString().padStart(3, '0');
+ return (hh + ':' + mm + ':' + ss + '.' + sss);
+ 
 }
 
 
@@ -94,7 +102,23 @@ function timeSpanToString(startDate, endDate) {
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
 function angleBetweenClockHands(date) {
-    throw new Error('Not implemented');
+   let h = date.getUTCHours();
+   if (h > 12) {
+      h -= 12;
+   }
+   let minAngle = 6 * date.getUTCMinutes();
+   let hAngle = 0.5 * (60 * h + date.getUTCMinutes());
+   let h_minAngle = hAngle - minAngle;
+   let rad = Math.abs(h_minAngle * (Math.PI/180));
+   return rad > Math.PI ? rad - Math.PI : rad;
+
+   /*let hAngle = 0.5 *(date.getUTCHours() * 60 + date.getUTCMinutes());
+   let mAngle = date.getUTCMinutes() * 6;
+   let angle = Math.abs(hAngle - mAngle);
+   angle = Math.min(angle, (360 - angle));
+   let anglerad = Math.PI * angle/180;
+   //anglerad = (anglerad < 0) ? anglerad * -1 : anglerad;
+   return anglerad > Math.PI ? anglerad - Math.PI : anglerad;*/
 }
 
 
